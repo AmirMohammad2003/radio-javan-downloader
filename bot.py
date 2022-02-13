@@ -20,6 +20,7 @@ updater = Updater(
 
 
 def start(update: Update, context: CallbackContext):
+    logger.info("Started: {}".format(update.effective_user.username))
     update.message.reply_text(
         "Please send the page link to get the download link."
     )
@@ -31,7 +32,8 @@ def unknown(update: Update, context: CallbackContext):
     )
 
 
-def unknown_text(update: Update, context: CallbackContext):
+def get_download_link(update: Update, context: CallbackContext):
+    logger.info(update.message.text + ":" + update.effective_user.username)
     try:
         dl = Downloader(update.message.text)
         download_link = dl.get_download_link()
@@ -45,7 +47,7 @@ def unknown_text(update: Update, context: CallbackContext):
 
 updater.dispatcher.add_handler(CommandHandler("start", start))
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, get_download_link))
 
 PORT = int(os.environ.get('PORT', 8443))
 updater.start_webhook(
