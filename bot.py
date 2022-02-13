@@ -49,4 +49,4 @@ updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
 
 PORT = int(os.environ.get('PORT', 5000))
 updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
-updater.bot.setWebhook('https://.herokuapp.com/' + TOKEN)
+updater.bot.setWebhook('https://rjdl.herokuapp.com/' + TOKEN)
