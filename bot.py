@@ -47,6 +47,6 @@ updater.dispatcher.add_handler(CommandHandler("start", start))
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
 
-PORT = int(os.environ.get('PORT', 5000))
+PORT = 8443  # int(os.environ.get('PORT', 8443))
 updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
 updater.bot.setWebhook('https://rjdl.herokuapp.com/' + TOKEN)
