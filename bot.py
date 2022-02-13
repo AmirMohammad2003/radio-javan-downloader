@@ -1,4 +1,6 @@
-from telnetlib import DO
+import os
+import logging
+
 from telegram.ext.updater import Updater
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
@@ -7,15 +9,19 @@ from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
 
 from downloader import Downloader
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 
+logger = logging.getLogger(__name__)
+TOKEN = "5233147023:AAFC3rUw4boaWksO2QMH8KEJT3uxGg8915A"
 updater = Updater(
-    "5233147023:AAFC3rUw4boaWksO2QMH8KEJT3uxGg8915A", use_context=True
+    TOKEN, use_context=True
 )
 
 
 def start(update: Update, context: CallbackContext):
     update.message.reply_text(
-        "Please send me the page link to get the download link."
+        "Please send the page link to get the download link."
     )
 
 
@@ -26,16 +32,21 @@ def unknown(update: Update, context: CallbackContext):
 
 
 def unknown_text(update: Update, context: CallbackContext):
-    dl = Downloader(update.message.text)
-    download_link = dl.get_download_link()
-    # download_link = "hello, world!"
-    update.message.reply_text("Here is the download link:\n{}".format(
-        download_link
-    ))
+    try:
+        dl = Downloader(update.message.text)
+        download_link = dl.get_download_link()
+        update.message.reply_text("Here is the download link:\n{}".format(
+            download_link
+        ))
+
+    except:
+        update.message.reply_text("Something went wrong. Please try again.")
 
 
 updater.dispatcher.add_handler(CommandHandler("start", start))
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
 
-updater.start_polling()
+PORT = int(os.environ.get('PORT', 5000))
+updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
+updater.bot.setWebhook('https://.herokuapp.com/' + TOKEN)
