@@ -13,7 +13,9 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-TOKEN = "5233147023:AAFC3rUw4boaWksO2QMH8KEJT3uxGg8915A"
+
+TOKEN = os.environ.get('TOKEN')
+
 updater = Updater(
     TOKEN, use_context=True
 )
